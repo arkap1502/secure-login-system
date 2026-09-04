@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Dashboard &mdash; Vaultline{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="page-header">
+    <h1>Dashboard</h1>
+    <p>Signed in as <strong style="color: var(--text-primary);">{{ current_user.username }}</strong>.</p>
+  </div>
+
+  <div class="dash-grid">
+    <div class="stat">
+      <div class="stat-label">Account status</div>
+      <div class="stat-value ok">Active</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Two-factor authentication</div>
+      <div class="stat-value {{ 'ok' if current_user.is_2fa_enabled else 'warn' }}">
+        {{ 'Enabled' if current_user.is_2fa_enabled else 'Not enabled' }}
+      </div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Last login</div>
+      <div class="stat-value">
+        {{ current_user.last_login_at.strftime('%b %d, %H:%M UTC') if current_user.last_login_at else 'This is your first login' }}
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="row-between">
+      <div>
+        <div class="panel-title">This session</div>
+        <p class="panel-desc" style="margin-bottom: 0;">
+          Your session cookie is HttpOnly and SameSite, and idles out after 30 minutes.
+          {% if not current_user.is_2fa_enabled %}Add two-factor authentication from your profile for a stronger login.{% endif %}
+        </p>
+      </div>
+      <a class="btn btn-secondary btn-inline" href="{{ url_for('main.profile') }}">Manage account</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

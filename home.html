@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Vaultline &mdash; secure authentication{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="hero">
+    <div>
+      <div class="hero-eyebrow">Reference build &mdash; Flask + SQLAlchemy</div>
+      <h1>Every login, verified properly.</h1>
+      <p class="hero-sub">
+        A small authentication system built the way one should be: hashed
+        passwords, rate-limited logins, server-checked sessions, and
+        optional two-factor verification for anyone who wants the extra
+        turn of the dial.
+      </p>
+      <div class="hero-actions">
+        {% if current_user.is_authenticated %}
+          <a class="btn btn-primary" href="{{ url_for('main.dashboard') }}">Go to dashboard</a>
+        {% else %}
+          <a class="btn btn-primary" href="{{ url_for('auth.register') }}">Create an account</a>
+          <a class="btn btn-secondary" href="{{ url_for('auth.login') }}">Log in</a>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="hero-dial-wrap">
+      <svg class="hero-dial" viewBox="0 0 340 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="170" cy="170" r="150" stroke="#362E25" stroke-width="1.5"/>
+        <circle cx="170" cy="170" r="118" stroke="#362E25" stroke-width="1"/>
+        {% for i in range(36) %}
+          {% set angle = i * 10 %}
+          {% set major = (i % 3 == 0) %}
+          <line
+            x1="170" y1="{{ 26 if major else 34 }}"
+            x2="170" y2="{{ 40 if major else 34 }}"
+            stroke="{{ '#C89B3C' if major else '#4A3F32' }}"
+            stroke-width="{{ '1.6' if major else '1' }}"
+            transform="rotate({{ angle }} 170 170)"
+          />
+        {% endfor %}
+        <circle cx="170" cy="170" r="6" fill="#C89B3C"/>
+        <g class="dial-needle">
+          <line x1="170" y1="170" x2="170" y2="70" stroke="#F2EDE4" stroke-width="2" stroke-linecap="round"/>
+          <line x1="170" y1="170" x2="170" y2="70" stroke="#C89B3C" stroke-width="2" stroke-linecap="round" opacity="0.55" transform="rotate(180 170 170)"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <div class="feature-grid">
+    <div class="feature">
+      <span class="feature-index">HASH</span>
+      <h3>Passwords, hashed only</h3>
+      <p>bcrypt hashing with a per-password salt. Plaintext never touches the database, not even briefly.</p>
+    </div>
+    <div class="feature">
+      <span class="feature-index">RATE</span>
+      <h3>Brute-force resistant</h3>
+      <p>Per-IP rate limiting plus a per-account lockout after repeated failed attempts.</p>
+    </div>
+    <div class="feature">
+      <span class="feature-index">ORM</span>
+      <h3>Injection-safe queries</h3>
+      <p>Every query runs through SQLAlchemy's parameterized query API &mdash; no string-built SQL, anywhere.</p>
+    </div>
+    <div class="feature">
+      <span class="feature-index">CSRF</span>
+      <h3>Forms carry a token</h3>
+      <p>Every state-changing form is protected by a per-session CSRF token, checked on submit.</p>
+    </div>
+    <div class="feature">
+      <span class="feature-index">SESS</span>
+      <h3>Sessions, server-verified</h3>
+      <p>HttpOnly, SameSite cookies with a 30-minute idle timeout and strict session protection.</p>
+    </div>
+    <div class="feature">
+      <span class="feature-index">TOTP</span>
+      <h3>Optional two-factor</h3>
+      <p>Time-based one-time codes via any authenticator app, required after password verification.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

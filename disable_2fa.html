@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% from "_macros.html" import render_field %}
+{% block title %}Disable two-factor authentication &mdash; Vaultline{% endblock %}
+
+{% block content %}
+<div class="center-stage">
+  <div class="card narrow">
+    <div class="card-header">
+      <div class="card-eyebrow">Security &middot; 2FA</div>
+      <h2>Disable two-factor authentication</h2>
+      <p>Confirm your password to remove the extra verification step from your logins.</p>
+    </div>
+
+    <form method="POST" novalidate>
+      {{ form.hidden_tag() }}
+      {{ render_field(form.password, autofocus=true, placeholder="Your password", autocomplete="current-password") }}
+      {{ form.submit(class="btn btn-danger") }}
+    </form>
+
+    <p style="margin-top: 20px; text-align: center; font-size: 0.9rem;">
+      <a href="{{ url_for('main.profile') }}">Cancel</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

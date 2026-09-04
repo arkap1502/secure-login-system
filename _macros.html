@@ -1,0 +1,11 @@
+{% macro render_field(field, extra_class="", autofocus=false) %}
+  <div class="form-group">
+    <label class="label" for="{{ field.id }}">{{ field.label.text }}</label>
+    {{ field(class="input " ~ extra_class, autofocus=autofocus, **kwargs) }}
+    {% if field.errors %}
+      {% for error in field.errors %}
+        <div class="field-error">{{ error }}</div>
+      {% endfor %}
+    {% endif %}
+  </div>
+{% endmacro %}

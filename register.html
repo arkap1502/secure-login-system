@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% from "_macros.html" import render_field %}
+{% block title %}Create account &mdash; Vaultline{% endblock %}
+
+{% block content %}
+<div class="center-stage">
+  <div class="card narrow">
+    <div class="card-header">
+      <div class="card-eyebrow">01 &middot; Registration</div>
+      <h2>Create your account</h2>
+      <p>Takes about a minute. No email verification loop to fight through.</p>
+    </div>
+
+    <form method="POST" action="{{ url_for('auth.register') }}" novalidate>
+      {{ form.hidden_tag() }}
+
+      {{ render_field(form.username, autofocus=true, placeholder="astra_lee", autocomplete="username") }}
+      {{ render_field(form.email, placeholder="you@example.com", autocomplete="email") }}
+
+      <div class="form-group">
+        <label class="label" for="{{ form.password.id }}">{{ form.password.label.text }}</label>
+        {{ form.password(class="input", id="password-input", autocomplete="new-password") }}
+        <div class="strength-meter" id="strength-meter">
+          <div class="strength-seg"></div><div class="strength-seg"></div>
+          <div class="strength-seg"></div><div class="strength-seg"></div>
+        </div>
+        <div class="strength-label" id="strength-label">Password strength</div>
+        <ul class="strength-checklist" id="strength-checklist">
+          <li data-rule="length">10+ characters</li>
+          <li data-rule="case">Upper &amp; lowercase</li>
+          <li data-rule="digit">A number</li>
+          <li data-rule="special">A special character</li>
+        </ul>
+        {% if form.password.errors %}
+          {% for error in form.password.errors %}
+            <div class="field-error">{{ error }}</div>
+          {% endfor %}
+        {% endif %}
+      </div>
+
+      {{ render_field(form.confirm_password, placeholder="Type it again", autocomplete="new-password") }}
+
+      {{ form.submit(class="btn btn-primary") }}
+    </form>
+
+    <p style="margin-top: 20px; text-align: center; font-size: 0.9rem;">
+      Already have an account? <a href="{{ url_for('auth.login') }}">Log in</a>
+    </p>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/password-strength.js') }}"></script>
+{% endblock %}
